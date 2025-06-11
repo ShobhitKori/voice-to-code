@@ -30,18 +30,23 @@ export default function Home() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("https://shobhitkori-voice-to-code-backend.hf.space/generate-code", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://shobhitkori-voice-to-code-backend.hf.space/generate-code",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (!res.ok) throw new Error("Failed to generate code.");
       const result = await res.json();
       setInstruction(result?.instruction || "Could not transcribe Audio File");
       setGeneratedCode(result?.code || "No code returned");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong.");
+      }
     }
   };
 
@@ -79,7 +84,9 @@ export default function Home() {
           )}
 
           {error && (
-            <p className="m-4 text-red-600 font-semibold w-full max-w-md mx-auto">Error: {error}</p>
+            <p className="m-4 text-red-600 font-semibold w-full max-w-md mx-auto">
+              Error: {error}
+            </p>
           )}
 
           {instruction && (
