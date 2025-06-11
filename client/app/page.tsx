@@ -41,6 +41,7 @@ export default function Home() {
       const result = await res.json();
       setInstruction(result?.instruction || "Could not transcribe Audio File");
       setGeneratedCode(result?.code || "No code returned");
+      setLoading(false)
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
