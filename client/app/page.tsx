@@ -30,7 +30,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("http://localhost:8000/generate-code", {
+      const res = await fetch("https://shobhitkori-voice-to-code-backend.hf.space/generate-code", {
         method: "POST",
         body: formData,
       });
