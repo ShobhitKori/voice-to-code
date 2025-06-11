@@ -1,7 +1,7 @@
 import os
 from fastapi import UploadFile
 
-AUDIO_DIR = "audio_files"
+AUDIO_DIR = "/tmp/audio_files"
 
 os.makedirs(AUDIO_DIR, exist_ok=True)
 

@@ -34,7 +34,10 @@
 #     output = model.generate(**inputs, max_length=256)
 #     return tokenizer.decode(output[0], skip_special_tokens=True)
 
+import os
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+MODEL_DIR = "/data/codet5-model"
 
 # Global variables but not initialized
 tokenizer = None
@@ -43,9 +46,14 @@ model = None
 def load_model():
     global tokenizer, model
     if tokenizer is None or model is None:
-        print("Loading CodeT5 model...")
-        tokenizer = AutoTokenizer.from_pretrained("Salesforce/codet5p-770m-py")
-        model = AutoModelForSeq2SeqLM.from_pretrained("Salesforce/codet5p-770m-py")
+        if not os.path.exists(MODEL_DIR):
+            print("Downloading CodeT5 model to persistent /data directory...")
+            tokenizer = AutoTokenizer.from_pretrained("Salesforce/codet5p-770m-py", cache_dir=MODEL_DIR)
+            model = AutoModelForSeq2SeqLM.from_pretrained("Salesforce/codet5p-770m-py", cache_dir=MODEL_DIR)
+        else:
+            print("Loading model from /data directory...")    
+            tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
+            model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_DIR)
         print("Model loaded.")
 
 def generate_code(instruction: str) -> str:

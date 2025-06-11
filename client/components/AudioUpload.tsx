@@ -7,10 +7,13 @@ type Props = {
 };
 
 const AudioUpload: React.FC<Props> = ({ onFileUpload }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]!;
+    const file = e.target.files?.[0];
+    if (!file) {
+      setError("No file selected");
+      return;
+    }
     const validMimeTypes = [
       "audio/mpeg",
       "audio/mp3",
@@ -26,12 +29,12 @@ const AudioUpload: React.FC<Props> = ({ onFileUpload }) => {
       fileExtension &&
       validExtensions.includes(fileExtension)
     ) {
-      setSelectedFile(file);
       onFileUpload(file);
     } else {
       e.target.value = ""; // Reset file input
       setError("Please upload a valid audio file (MP3, WAV, OGG).");
       setTimeout(() => setError(""), 3000);
+      return;
     }
   };
 
